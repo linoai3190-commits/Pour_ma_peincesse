@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Clinique des Petites Douceurs</title>
+<style>
+/* ===== Palette : crépuscule, crème, rose ancien, bordeaux doux, lavande, or ===== */
+:root{--cream:#fbf3e8;--rose:#d9a5a8;--rose2:#f0d3d0;--wine:#6e2a3a;--lav:#b9a6d3;--gold:#e8c26a;--night:#2e2340;--ink:#4a2a35}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;color:var(--ink);font-size:17px;line-height:1.7;
+ background:linear-gradient(180deg,#3a2c52 0,#7b5a7e 28%,#d9a5a8 62%,#fbf3e8 100%) fixed;
+ padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);overflow-x:hidden}
+/* Décor */
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.25;animation:tw 5s ease-in-out infinite}
+@keyframes tw{50%{opacity:.9}}
+.win{position:fixed;top:14px;right:14px;width:62px;height:84px;border:3px solid var(--gold);border-radius:31px 31px 4px 4px;
+ background:radial-gradient(circle at 60% 35%,#fff6d8 0 9px,transparent 10px),#2e2340;opacity:.75;z-index:0;pointer-events:none}
+.win:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--gold);opacity:.7}
+.heart{position:absolute;bottom:-30px;color:var(--rose);opacity:0;animation:fl 14s linear infinite}
+@keyframes fl{10%{opacity:.5}100%{transform:translateY(-110vh) translateX(20px);opacity:0}}
+/* Scènes */
+main{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:24px 18px 48px}
+.scene{display:none;min-height:88vh;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
+.scene.active{display:flex;animation:in .9s ease both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+h1,h2{font-weight:600;line-height:1.25;color:var(--cream)}
+h1{font-size:1.55rem}h2{font-size:1.25rem}
+.sub{color:#f6e6e0;font-style:italic}
+.card{background:var(--cream);border-radius:14px;padding:22px 20px;text-align:left;box-shadow:0 8px 28px rgba(46,35,64,.28);width:100%;border:1px solid var(--rose2)}
+.card h3{color:var(--wine);font-size:1.05rem;text-align:center;margin-bottom:10px;letter-spacing:.02em}
+.card ul{padding-left:20px}.card li{margin:6px 0}
+.letter p{margin:0 0 14px}
+.note{font-size:.92rem;font-style:italic;color:var(--wine);background:#f5e2dc;border-left:3px solid var(--rose);padding:10px 12px;border-radius:6px;text-align:left;width:100%}
+.small{font-size:.82rem;color:#6a4a54;font-style:italic}
+button{font:inherit;font-weight:600;background:var(--wine);color:var(--cream);border:0;border-radius:999px;padding:15px 26px;min-height:52px;
+ box-shadow:0 6px 16px rgba(110,42,58,.35);cursor:pointer;transition:transform .2s}
+button:active{transform:scale(.97)}button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+button.ghost{background:transparent;color:var(--wine);box-shadow:none;border:1.5px solid var(--wine)}
+/* Tampons */
+.stamp{display:inline-block;border:3px double #a33a4e;color:#a33a4e;font-weight:700;padding:8px 12px;border-radius:8px;transform:rotate(-5deg);
+ font-size:.85rem;line-height:1.3;text-align:center;margin:12px auto;opacity:0}
+.scene.active .stamp{animation:st 0.6s 1.6s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes st{from{opacity:0;transform:rotate(-5deg) scale(2.2)}to{opacity:.9;transform:rotate(-5deg) scale(1)}}
+/* Lettres : apparition progressive */
+.letter p{opacity:0}
+.scene.active .letter p{animation:fd 1s ease both}
+@keyframes fd{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+/* Stéthoscope / cœur */
+.steth{width:150px;height:150px}
+.steth .tube{fill:none;stroke:var(--gold);stroke-width:5;stroke-linecap:round;stroke-dasharray:420;stroke-dashoffset:420;animation:dr 2.4s .3s ease forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.steth .hrt{fill:#e58a9a;transform-origin:75px 80px;opacity:0;animation:hi 1s 2s ease forwards,beat 2.4s 3s ease-in-out infinite}
+@keyframes hi{to{opacity:1}}
+@keyframes beat{0%,60%,100%{transform:scale(1)}15%{transform:scale(1.1)}30%{transform:scale(1)}45%{transform:scale(1.07)}}
+.bigheart{font-size:2.6rem;color:#e58a9a;display:inline-block;animation:beat 2.6s ease-in-out infinite}
+/* Enveloppe */
+.env{position:relative;width:250px;height:165px;margin:10px auto;background:#efd0cc;border-radius:6px;box-shadow:0 8px 22px rgba(46,35,64,.3)}
+.env:before{content:"";position:absolute;inset:0;border-radius:6px;background:linear-gradient(135deg,transparent 49%,#e3b8b6 50%) left/50% 100% no-repeat,linear-gradient(225deg,transparent 49%,#e3b8b6 50%) right/50% 100% no-repeat}
+.flap{position:absolute;top:0;left:0;width:100%;height:95px;background:#d9a5a8;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform 1.4s ease;z-index:2}
+.seal{position:absolute;top:70px;left:50%;margin-left:-19px;width:38px;height:38px;border-radius:50%;background:var(--wine);color:var(--cream);display:grid;place-items:center;z-index:3;transition:opacity .6s}
+.env.open .flap{transform:rotateX(180deg);z-index:0}.env.open .seal{opacity:0}
+#ov{position:fixed;inset:0;z-index:5;background:rgba(46,35,64,.85);display:none;align-items:center;justify-content:center}
+#ov.show{display:flex}
+/* Dossier qui se déplie */
+.folder{width:100%;max-height:0;overflow:hidden;transition:max-height 1.6s ease}
+.scene.active .folder{max-height:900px;transition-delay:.4s}
+/* Veilleuse */
+.lamp{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff1c4 0,rgba(232,194,106,.55) 35%,transparent 70%);animation:gl 6s ease-in-out infinite}
+@keyframes gl{50%{transform:scale(1.15);opacity:.8}}
+.reveal{display:none;width:100%}.reveal.show{display:block;animation:in 1.2s ease both}
+.sig{font-weight:700;color:var(--wine);text-align:center;margin-top:8px}
+/* Accessibilité mouvement */
+@media (prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation:none!important;transition:none!important}
+ .heart{display:none}.letter p,.stamp{opacity:1}.steth .tube{stroke-dashoffset:0}.steth .hrt{opacity:1}.folder{max-height:900px}
+}
+</style>
+</head>
+<body>
+<div id="sky" aria-hidden="true"></div>
+<div class="win" aria-hidden="true"></div>
+
+<main>
+<!-- Scène 0 : ouverture -->
+<section class="scene active" id="s0">
+ <svg class="steth" viewBox="0 0 150 150" aria-hidden="true">
+  <path class="hrt" d="M75 112C40 88 38 62 55 56c10-3 17 3 20 10 3-7 10-13 20-10 17 6 15 32-20 56z"/>
+  <path class="tube" d="M30 20C14 50 18 108 75 132c57-24 61-82 45-112M30 20v-8M120 20v-8"/>
+  <circle cx="75" cy="136" r="7" fill="#e8c26a"/>
+ </svg>
+ <h1>Bonjour, Docteure. Une consultation un peu particulière vous attend. ❤️</h1>
+ <p class="sub">Motif de consultation : fatigue accumulée, journées bien remplies et besoin urgent d'une petite parenthèse qui ne demande aucun effort.</p>
+ <button id="enter">Entrer dans ma petite clinique 💌</button>
+ <p class="small" style="color:#f6e6e0"><b>La Clinique des Petites Douceurs</b> — Service réservé à une certaine Docteure.<br>Ici, aucun patient ne t'attend. Pour quelques instants, tu n'as rien à prouver. Tu peux simplement être toi.</p>
+</section>
+
+<!-- Scène 1 : dossier -->
+<section class="scene" id="s1">
+ <h2>Le dossier confidentiel de ma Docteure préférée</h2>
+ <div class="card">
+  <h3>DOSSIER CONFIDENTIEL — ACCÈS AUTORISÉ AU CŒUR UNIQUEMENT</h3>
+  <ul>
+   <li><b>Patiente :</b> une femme admirable qui a aussi le droit d'être fatiguée.</li>
+   <li><b>Profession :</b> interne en médecine.</li>
+   <li><b>Lieu de mission :</b> hôpital Charles-de-Gaulle.</li>
+   <li><b>Symptôme observé par son admirateur :</b> une tendance à consacrer beaucoup d'énergie aux autres.</li>
+   <li><b>Diagnostic sentimental :</b> une personne qui mérite qu'on lui réserve aussi un peu de tendresse.</li>
+   <li><b>Pronostic souhaité :</b> davantage de moments paisibles, de sourires spontanés et de petites joies personnelles.</li>
+  </ul>
+  <div style="text-align:center"><div class="stamp">DOSSIER ACCEPTÉ —<br>PRESCRIPTION DE DOUCEUR IMMÉDIATE</div></div>
+ </div>
+ <p class="note">Après examen approfondi, le comité scientifique confirme qu'une Docteure peut être brillante sans devoir fonctionner avec une batterie chargée à 2 %. Le chargeur recommandé est le repos. Le café n'est pas homologué comme remplacement du sommeil. 😂</p>
+ <p class="small" style="color:#f6e6e0">Mise en scène affectueuse : rien de tout cela n'est un véritable diagnostic médical.</p>
+ <button class="next">Continuer</button>
+</section>
+
+<!-- Scène 2 : lettre centrale -->
+<section class="scene" id="s2">
+ <h2>Ce que j'aimerais que tu n'oublies jamais</h2>
+ <div class="card letter">
+  <p>Ma Princesse,</p>
+  <p>Je voudrais que tu saches quelque chose : je ne trouve pas ta valeur uniquement dans ce que tu réussis, dans ce que tu accomplis ou dans tout ce que tu arrives à supporter.</p>
+  <p>Je la vois aussi dans la personne que tu es lorsque personne ne te demande rien, lorsque tu n'as pas besoin de trouver une solution, lorsque tu peux laisser tomber les exigences de la journée et simplement respirer.</p>
+  <p>Tu as le droit d'avoir des journées où tu n'as plus beaucoup d'énergie. Tu as le droit de ne pas être au meilleur de toi-même. Tu as le droit de t'arrêter un instant sans avoir à justifier cette pause.</p>
+  <p>Je sais que la médecine demande énormément à celles et ceux qui la choisissent. Mais j'espère qu'au milieu de toutes ces responsabilités, tu trouveras toujours un petit espace où tu n'auras pas besoin d'être la Docteure qui sait quoi faire.</p>
+  <p>Un espace où tu pourras simplement être ma Princesse, avec tes envies, tes silences, tes sourires, tes petites faiblesses et tout ce qui fait de toi une personne unique.</p>
+  <p>Et si je pouvais déposer quelque chose dans cet espace, ce ne serait pas un grand discours. Ce serait juste cette certitude toute simple : tu mérites qu'on te témoigne de l'affection sans attendre que tu aies accompli quelque chose pour la recevoir.</p>
+  <p>Tu n'as pas besoin de sauver le monde pour mériter une belle attention. Aujourd'hui, le monde peut patienter cinq minutes. J'ai même rédigé une note officielle pour l'en informer. ❤️</p>
+ </div>
+ <p class="note letter" id="n2"><span>NOTE DE SERVICE : toute tentative de sauver l'humanité avant d'avoir pris un moment pour soi devra être validée par le ministère du repos. Le ministère se réserve le droit de confisquer symboliquement le stéthoscope pendant cinq minutes. 😂</span></p>
+ <button class="next">Continuer</button>
+</section>
+
+<!-- Scène 3 : ordonnance -->
+<section class="scene" id="s3">
+ <h2>Une ordonnance qui ne figure dans aucun manuel</h2>
+ <div class="card">
+  <h3>ORDONNANCE DU BONHEUR SIMPLE</h3>
+  <p><b>Docteure concernée :</b> Ma Princesse.</p>
+  <p><b>Traitement symbolique :</b></p>
+  <ul>
+   <li>Une pause pendant laquelle elle n'a rien à prouver.</li>
+   <li>Une boisson qu'elle aime, savourée sans courir si son emploi du temps le permet.</li>
+   <li>Un petit moment de calme, même bref.</li>
+   <li>Le droit de rire d'une plaisanterie parfaitement nulle.</li>
+   <li>Une dose de tendresse sans justification administrative.</li>
+   <li>Un rappel quotidien : sa propre personne mérite aussi son attention.</li>
+  </ul>
+  <p><b>Durée du traitement :</b> selon ses besoins, sans pression et sans calendrier imposé.</p>
+  <p><b>Effets secondaires possibles :</b></p>
+  <ul>
+   <li>Un sourire inattendu.</li>
+   <li>Une baisse temporaire du sérieux professionnel.</li>
+   <li>Une envie de répondre « Docteur, votre prescription est bizarre, mais je valide ». 😂</li>
+  </ul>
+  <div style="text-align:center"><div class="stamp">PRESCRIPTION APPROUVÉE PAR LE CONSEIL SUPÉRIEUR<br>DES CÂLINS IMAGINAIRES</div></div>
+ </div>
+ <p class="small" style="color:#f6e6e0">Les câlins imaginaires ne remplacent ni le repos ni les vrais moments de douceur. Ils ont simplement l'avantage d'être disponibles sans rendez-vous.</p>
+ <button class="next">Continuer</button>
+</section>
+
+<!-- Scène 4 : rapport d'incident -->
+<section class="scene" id="s4">
+ <h2>Le rapport d'incident amoureux</h2>
+ <div class="folder"><div class="card">
+  <h3>RAPPORT CONFIDENTIEL — INCIDENT NON MAÎTRISÉ</h3>
+  <p><b>Objet :</b> présence persistante d'une certaine interne dans les pensées d'un individu.</p>
+  <p><b>Constatations :</b></p>
+  <ul>
+   <li>Apparition de sourires sans raison professionnelle.</li>
+   <li>Consultation répétée d'un téléphone dans l'espoir d'un petit message.</li>
+   <li>Incapacité du suspect à expliquer pourquoi une simple pensée peut embellir une journée.</li>
+   <li>Résistance du suspect à tout traitement visant à oublier cette personne.</li>
+  </ul>
+  <p><b>Décision du comité :</b> « Aucun traitement correctif n'est recommandé. Le suspect semble satisfait de sa situation. »</p>
+  <div style="text-align:center"><div class="stamp">AFFAIRE CLASSÉE<br>SANS SUITE</div></div>
+ </div></div>
+ <p class="note">Je précise que cette enquête est purement symbolique. Mon seul véritable aveu, c'est que j'aime l'idée de pouvoir t'apporter un sourire, même lorsque je ne peux pas être près de toi. 😂❤️</p>
+ <button class="next">Continuer</button>
+</section>
+
+<!-- Scène 5 : veilleuse -->
+<section class="scene" id="s5">
+ <div class="lamp" aria-hidden="true"></div>
+ <h2>Mon petit cadeau avant de te laisser reprendre ta journée</h2>
+ <div class="card letter">
+  <p>Ma Princesse,</p>
+  <p>Je ne vais pas te demander de sourire à tout prix, de répondre immédiatement ni de faire semblant d'aller bien si tu es épuisée.</p>
+  <p>Je voulais simplement ajouter une petite chose agréable à ta journée, quelque chose qui ne te demande rien en retour.</p>
+  <p>J'espère que tu trouveras aujourd'hui un moment où tes épaules pourront se relâcher, où tes pensées pourront ralentir et où tu pourras retrouver un peu d'énergie à ton rythme.</p>
+  <p>Et lorsque tu auras terminé tes obligations, j'espère que tu pourras retrouver un endroit où tu te sentiras libre de ne rien faire d'extraordinaire.</p>
+  <p>Pour ma part, je voulais te dire que derrière ce petit écran, il y a quelqu'un qui ne voit pas seulement une interne en médecine. Il y a quelqu'un qui pense aussi à la femme derrière la blouse, à son sourire, à sa sensibilité et à tout ce qu'elle mérite de beau.</p>
+  <p>Je ne peux pas alléger à ta place toutes les exigences de ton métier. Mais je peux choisir de t'adresser des mots qui ne t'ajoutent aucune obligation.</p>
+  <p>Alors, pas de devoir à rendre, pas de compte rendu à signer, pas de réponse obligatoire.</p>
+  <p>Juste un petit message qui te dit : tu comptes pour moi, et je te souhaite sincèrement des jours plus légers.</p>
+  <p>Et si tu as souri ne serait-ce qu'une seconde, je considère que ma consultation a été un succès. Je vais réclamer mon diplôme de spécialiste en sourires, même si mon jury se compose uniquement de moi-même. 😂❤️</p>
+ </div>
+ <button class="next">Continuer</button>
+</section>
+
+<!-- Scène 6 : révélation finale -->
+<section class="scene" id="s6">
+ <h2>Une dernière chose, Docteure</h2>
+ <div class="env" id="env"><div class="flap"></div><div class="seal">❤</div></div>
+ <p class="sub" id="last">Le dernier résultat de la consultation est disponible.</p>
+ <button id="readLast">Lire la dernière note ❤️</button>
+ <div class="reveal" id="fin">
+  <div class="card">
+   <p>Ma Princesse,</p>
+   <p>Je ne souhaite pas seulement être celui qui t'écrit de jolies choses quand tout va bien. J'aimerais aussi être une présence qui t'apporte de la douceur dans les périodes où la vie te demande beaucoup.</p>
+   <p>Je veux que mes mots soient pour toi un endroit agréable où faire une petite pause, jamais une chose de plus à gérer.</p>
+   <p>Prends soin de toi, à ton rythme. Tu as le droit de souffler, de rire, de dormir, de rêver et de penser à autre chose que tes responsabilités.</p>
+   <p>Et si un jour tu racontes à quelqu'un que tu as reçu une consultation sans médecin, sans salle d'attente et sans frais, précise bien que le spécialiste était surtout amoureux. 😂❤️</p>
+   <p>Je t'envoie une pensée tendre, un sourire et un bisou soigneusement emballé pour éviter toute contamination par la fatigue.</p>
+   <p>Avec toute ma tendresse, ma Princesse. ❤️</p>
+  </div>
+  <div style="text-align:center;margin-top:18px"><span class="bigheart" aria-hidden="true">❤</span></div>
+  <p class="sig">Fin de consultation. Début d'une petite pensée qui reste avec toi.</p>
+  <div style="text-align:center;margin-top:14px"><button class="ghost" id="again">Recommencer l'expérience</button></div>
+ </div>
+</section>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var scenes=document.querySelectorAll(".scene"), cur=0;
+  var calm=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Ciel : étoiles qui scintillent + petits cœurs flottants
+  var sky=document.getElementById("sky");
+  for(var i=0;i<28;i++){
+    var s=document.createElement("i"); s.className="star";
+    s.style.left=Math.random()*100+"%"; s.style.top=Math.random()*55+"%";
+    s.style.animationDelay=(Math.random()*5)+"s"; sky.appendChild(s);
+  }
+  if(!calm){
+    for(var j=0;j<7;j++){
+      var h=document.createElement("span"); h.className="heart"; h.textContent="♥";
+      h.style.left=(8+j*13)+"%"; h.style.fontSize=(12+Math.random()*10)+"px";
+      h.style.animationDelay=(j*2)+"s"; h.style.animationDuration=(12+Math.random()*6)+"s"; sky.appendChild(h);
+    }
+  }
+
+  // Apparition progressive des lettres (délais échelonnés)
+  document.querySelectorAll(".letter").forEach(function(l){
+    var step=l.id==="n2"?0:1;
+    l.querySelectorAll("p,span").forEach(function(p,k){ if(p.tagName==="P") p.style.animationDelay=(0.4+k*1.1)+"s"; });
+  });
+  // La note de service apparaît après la lettre
+  var n2=document.getElementById("n2");
+  n2.style.opacity=0; n2.dataset.late="1";
+
+  function go(n){
+    scenes[cur].classList.remove("active");
+    cur=n; scenes[cur].classList.add("active");
+    window.scrollTo(0,0);
+    if(cur===2){ n2.style.transition="opacity 1s"; n2.style.opacity=calm?1:0; if(!calm) setTimeout(function(){n2.style.opacity=1;},8800); }
+  }
+
+  // Ouverture : enveloppe qui s'ouvre, puis scène 1
+  var enter=document.getElementById("enter");
+  enter.addEventListener("click",function(){
+    var ov=document.createElement("div"); ov.id="ov"; ov.className="show";
+    ov.innerHTML='<div class="env" id="e0"><div class="flap"></div><div class="seal">❤</div></div>';
+    document.body.appendChild(ov);
+    setTimeout(function(){ document.getElementById("e0").classList.add("open"); },calm?0:300);
+    setTimeout(function(){ go(1); ov.remove(); },calm?200:2200);
+  });
+
+  document.querySelectorAll(".next").forEach(function(b){
+    b.addEventListener("click",function(){ go(cur+1); });
+  });
+
+  // Dernière enveloppe
+  document.getElementById("readLast").addEventListener("click",function(){
+    document.getElementById("env").classList.add("open");
+    this.style.display="none"; document.getElementById("last").style.display="none";
+    setTimeout(function(){ document.getElementById("fin").classList.add("show"); },calm?0:1200);
+  });
+
+  // Recommencer
+  document.getElementById("again").addEventListener("click",function(){
+    document.getElementById("fin").classList.remove("show");
+    document.getElementById("env").classList.remove("open");
+    var rb=document.getElementById("readLast"); rb.style.display=""; document.getElementById("last").style.display="";
+    go(0);
+  });
+})();
+</script>
+</body>
+</html>
